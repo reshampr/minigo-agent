@@ -10,9 +10,11 @@ grid_size = 5
 black = 1
 white = 2
 KOMI = grid_size / 2
-INPUT_FILE_NAME = "/Applications/Code's/Game agent HW2/resource/asnlib/public/myplayer_play/init/input.txt"
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-STEP_FILE = os.path.join(BASE_DIR, "step.txt")
+GAME_IO_DIR = os.path.join(BASE_DIR, "game_io")
+INPUT_FILE_NAME = os.path.join(GAME_IO_DIR, "input.txt")
+OUTPUT_FILE_NAME = os.path.join(GAME_IO_DIR, "output.txt")
+STEP_FILE = os.path.join(GAME_IO_DIR, "step.txt")
 DIRECTIONS = [[1, 0], [0, 1], [-1, 0], [0, -1]]  # down,right,up,left
 
 
@@ -383,6 +385,8 @@ class Go_agent:
             return False
 
     def evaluation_func(self, current_state, turn,prev_move):
+        if prev_move is None:
+            prev_move = (-1, -1)
 
         opponent = self.opp_side(turn)
         turn_stones, opponent_stones = self.number_of_stones(current_state, turn)
@@ -604,6 +608,7 @@ def step_calculator(prev_game_state, curr_game_state):
 
 
 if __name__ == '__main__':
+    os.makedirs(GAME_IO_DIR, exist_ok=True)
 
     turn, prev_state, curr_state = read_file()
     step_number = step_calculator(prev_state, curr_state)
@@ -626,4 +631,4 @@ if __name__ == '__main__':
                                 True, None, False,
                                 alpha, beta)
 
-    write_file('output.txt', Play)
+    write_file(OUTPUT_FILE_NAME, Play)
